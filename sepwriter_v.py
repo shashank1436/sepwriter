@@ -11,19 +11,17 @@ lines = file.readlines()
 res = []
 c=0
 for a in lines: 
-    print(a)
-    print(res)
     perm = [x for x in a.split(" ")]
     for i in range(len(perm)):
         if(perm[i] == '{'):
             per = perm[i+1]
-        if('scontext=' and 'u:object_r:' in perm[i]):
+        if('scontext=' in perm[i] and 'u:object_r:' in perm[i]):
             scon = (perm[i].split('u:object_r:')[1]).split(':s0')[0]
-        if('scontext=' and 'u:r:' in perm[i]):
+        if('scontext=' in perm[i] and 'u:r:' in perm[i]):
             scon = (perm[i].split('u:r:')[1]).split(':s0')[0]
-        if('tcontext=' and 'u:object_r:' in perm[i]):
+        if('tcontext=' in perm[i] and 'u:object_r:' in perm[i]):
             tcon = perm[i].split('u:object_r:')[1].split(':s0')[0]
-        if('tcontext=' and 'u:r:' in perm[i]):
+        if('tcontext=' in perm[i] and 'u:r:' in perm[i]):
             tcon = perm[i].split('u:r:')[1].split(':s0')[0]        
         if('tclass=' in perm[i]):
             tcl = perm[i].split('tclass=')[1]
@@ -57,6 +55,8 @@ if not os.path.exists('sepolicy/public'):
 if not os.path.exists('sepolicy/vendor'):
     os.mkdir('sepolicy/vendor')
 
+x=len(res)
+n=1
 #Writes all the resolutions in the respective files
 for i in res:
     fn = i.split(' ')[1]+".te" #Here Goes the location of your sepolicy folder"
@@ -69,6 +69,7 @@ for i in res:
     file = open("sepolicy/"+fn, 'a')
     file.write(i+"\n")
     file.close
-
+    print("\r", n, "/", x)
+    n+=1
 print(count, ' Denials resolved')
 
